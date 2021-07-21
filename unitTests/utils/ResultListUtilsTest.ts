@@ -114,30 +114,37 @@ export const ResultListUtilsTest = () => {
         expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
       });
 
-      it(`with an active result list in a normal browser (not IE11)
-      should call the ScrollTo method of the HTMLElement`, () => {
-        appendResultListToRoot({ infiniteScrollContainer });
-
-        utils.scrollToTop(root.element);
-        expect(infiniteScrollContainer.scrollTo).toHaveBeenCalledWith(0, window.pageYOffset + root.element.getBoundingClientRect().top);
-      });
-
-      it(`with an active result list the IE11 browser
-      should change the scrollTop property of the scrollContainer`, () => {
-        appendResultListToRoot({ infiniteScrollContainer });
-        infiniteScrollContainer.scrollTo = undefined;
-
-        utils.scrollToTop(root.element);
-        expect(scrollTopSpy).toHaveBeenCalledWith(0);
-      });
-
       it(`when the top of the searchInterface is in the view port
       should not scroll`, () => {
         appendResultListToRoot();
-        spyOn(resultList.searchInterface.element, 'getBoundingClientRect').and.returnValue({ top: -100 });
+        spyOn(resultList.searchInterface.element, 'getBoundingClientRect').and.returnValue({ top: 100 });
 
         utils.scrollToTop(root.element);
-        expect(scrollTopSpy).not.toHaveBeenCalled();
+        expect(window.scrollTo).not.toHaveBeenCalled();
+      });
+
+      it(`when the top of the searchInterface is above the view port
+      it scrolls to the search interface`, () => {
+        const top = -100;
+
+        appendResultListToRoot();
+        spyOn(resultList.searchInterface.element, 'getBoundingClientRect').and.returnValue({ top });
+
+        utils.scrollToTop(root.element);
+        expect(window.scrollTo).toHaveBeenCalledWith(0, top);
+      });
+
+      it(`when the top of the searchInterface is above the view port, and is offset from the top of the page,
+      it scrolls to the search interface`, () => {
+        const yOffset = 1000;
+        const top = -100;
+
+        appendResultListToRoot();
+        (window as any).pageYOffset = yOffset;
+        spyOn(resultList.searchInterface.element, 'getBoundingClientRect').and.returnValue({ top });
+
+        utils.scrollToTop(root.element);
+        expect(window.scrollTo).toHaveBeenCalledWith(0, yOffset + top);
       });
     });
   });

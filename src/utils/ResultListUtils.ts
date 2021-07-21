@@ -35,13 +35,7 @@ export class ResultListUtils {
       return;
     }
 
-    const scrollContainer = resultList.options.infiniteScrollContainer;
-
-    if (typeof scrollContainer.scrollTo === 'function') {
-      scrollContainer.scrollTo(0, window.pageYOffset + searchInterfacePosition);
-    } else {
-      (<HTMLElement>scrollContainer).scrollTop = 0;
-    }
+    window.scrollTo(0, window.pageYOffset + searchInterfacePosition);
   }
 
   private static getActiveResultList(root: HTMLElement) {
