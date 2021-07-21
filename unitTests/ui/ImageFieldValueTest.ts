@@ -41,6 +41,18 @@ export function FieldImageTest() {
         const img = $$(test.cmp.element).find('img');
         expect(img.getAttribute('height')).toBe(height.toString());
       });
+
+      it('srcTemplate should be resolved and applied to the img tag', () => {
+        initializeFieldValueComponent(
+          {
+            field: '@ccimage',
+            srcTemplate: 'https://somewebsite.com/${raw.image}.webp'
+          },
+          { ...FakeResults.createFakeResult(), raw: { image: 'abc' } }
+        );
+        const img = $$(test.cmp.element).find('img');
+        expect(img.getAttribute('src')).toBe('https://somewebsite.com/abc.webp');
+      });
     });
   });
 }

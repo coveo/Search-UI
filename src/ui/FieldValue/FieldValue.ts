@@ -313,7 +313,7 @@ export class FieldValue extends Component {
       const helper = TemplateHelpers.getHelper(`${this.options.helper}v2`) || TemplateHelpers.getHelper(`${this.options.helper}`);
 
       if (Utils.exists(helper)) {
-        toRender = helper.call(this, value, this.getHelperOptions());
+        toRender = helper.call(this, value, this.getHelperOptions(), this.result);
       } else {
         this.logger.warn(
           `Helper ${this.options.helper} is not found in available helpers. The list of supported helpers is :`,
